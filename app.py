@@ -3,6 +3,56 @@ import datetime
 app = Flask(__name__)
 
 @app.route("/")
+@app.route("/index")
+def index():
+    return '''<!doctype html>
+        <html>
+            <head>
+                <title>НГТУ, ФБ, Лабораторные работы</title>
+            </head>
+            <body>
+                <header>НГТУ, ФБ, WEB-программирование, часть 2.</header> 
+                <h1>Список лабораторных</h1>
+                <ul>
+                    <li><a href='/lab1'>Первая лабораторная</a></li>
+                </ul>
+                <footer>
+                    Окачутин Вячеслав Владимирович, ФБИ-33, 3 курс, 2025
+                </footer>
+            </body>
+        </html>'''
+
+@app.route("/lab1")
+def lab1():
+    return '''<!doctype html>
+<html>
+    <head>
+        <title>Лабораторная 1</title>
+    </head>
+    <body>
+        <header>
+            НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных
+        </header>
+        <main>
+            <h1>Первая лабораторная работа</h1>
+            
+            <a href="''' + url_for('index') + '''">Вернуться на главную</a>
+            
+            <h2>Список роутов</h2>
+            <ul>
+                <li><a href="''' + url_for('web') + '''">Web-сервер на Flask</a></li>
+                <li><a href="''' + url_for('author') + '''">Об авторе</a></li>
+                <li><a href="''' + url_for('image') + '''">Изображение</a></li>
+                <li><a href="''' + url_for('counter') + '''">Счетчик посещений</a></li>
+                <li><a href="''' + url_for('info') + '''">Перенаправление</a></li>
+            </ul>
+        </main>
+        <footer>
+            Окачутин Вячеслав Владимирович, ФБИ-33, 3 курс, 2025
+        </footer>
+    </body>
+</html>'''
+
 @app.route("/lab1/web")
 def web():
     return '''<!doctype html>
@@ -14,6 +64,7 @@ def web():
             'X-Server': 'sample',
             'Content-Type': 'text/plain; charset=utf-8'
         }
+
 @app.route("/lab1/author")
 def author():
     name = "Окачутин Вячеслав Владимирович"
@@ -28,6 +79,7 @@ def author():
                 <a href='/web'>web</a>
             </body>
         </html>"""
+
 @app.route('/lab1/image')
 def image():
     path = url_for("static", filename="flask.jpg")
@@ -42,7 +94,9 @@ def image():
             <img src=""" + path + """>
         </body>
     </html>"""
+
 count = 0
+
 @app.route('/lab1/counter')
 def counter():
     global count
@@ -64,14 +118,17 @@ def counter():
     </body>
 </html>
 """
+
 @app.route('/reset_counter')
 def reset_counter():
     global count
     count = 0
     return redirect(url_for('counter'))
+
 @app.route("/lab1/info")
 def info():
     return redirect("/author")
+
 @app.route("/lab1/created")
 def created():
     return """
@@ -83,6 +140,7 @@ def created():
     </body>
 </html>
 """, 201
+
 @app.errorhandler(404)
 def not_found(err):
     return "нет такой страницы", 404
