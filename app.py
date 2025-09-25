@@ -3,7 +3,7 @@ import datetime
 app = Flask(__name__)
 
 @app.route("/")
-@app.route("/web")
+@app.route("/lab1/web")
 def web():
     return '''<!doctype html>
         <html>
@@ -14,7 +14,7 @@ def web():
             'X-Server': 'sample',
             'Content-Type': 'text/plain; charset=utf-8'
         }
-@app.route("/author")
+@app.route("/lab1/author")
 def author():
     name = "Окачутин Вячеслав Владимирович"
     group = "ФБИ-33"
@@ -28,7 +28,7 @@ def author():
                 <a href='/web'>web</a>
             </body>
         </html>"""
-@app.route('/image')
+@app.route('/lab1/image')
 def image():
     path = url_for("static", filename="flask.jpg")
     css_path = url_for("static", filename="lab1.css") 
@@ -43,7 +43,7 @@ def image():
         </body>
     </html>"""
 count = 0
-@app.route('/counter')
+@app.route('/lab1/counter')
 def counter():
     global count
     count += 1
@@ -69,7 +69,7 @@ def reset_counter():
     global count
     count = 0
     return redirect(url_for('counter'))
-@app.route("/info")
+@app.route("/lab1/info")
 def info():
     return redirect("/author")
 @app.route("/lab1/created")
