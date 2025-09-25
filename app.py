@@ -52,6 +52,14 @@ def lab1():
                 <li><a href="''' + url_for('image') + '''">Изображение</a></li>
                 <li><a href="''' + url_for('counter') + '''">Счетчик посещений</a></li>
                 <li><a href="''' + url_for('info') + '''">Перенаправление</a></li>
+                <li><a href="''' + url_for('created') + '''">Создано успешно</a></li>
+                <li><a href="''' + url_for('bad_request') + '''">400</a></li>
+                <li><a href="''' + url_for('unauthorized') + '''">401</a></li>
+                <li><a href="''' + url_for('payment_required') + '''">402</a></li>
+                <li><a href="''' + url_for('forbidden') + '''">403</a></li>
+                <li><a href="''' + url_for('method_not_allowed') + '''">405</a></li>
+                <li><a href="''' + url_for('teapot') + '''">418</a></li>
+                <li><a href="''' + url_for('server_error_test') + '''">500</a></li>
             </ul>
         </main>
         <footer>
@@ -83,7 +91,7 @@ def author():
                 <p>Студент: """ + name + """</p>
                 <p>Группа: """ + group + """</p>
                 <p>Факультет: """ + faculty + """</p>
-                <a href='/web'>web</a>
+                <a href=""" + url_for('web') + """>web</a>
             </body>
         </html>"""
 
@@ -100,7 +108,12 @@ def image():
             <h1>Flask</h1>
             <img src=""" + path + """>
         </body>
-    </html>"""
+    </html>""", 200, {
+        'Content-Language': 'ru',
+        'X-Developer': 'Okachuchin Vyacheslav',
+        'X-App-Version': '1.0',
+        'X-Custom-Header': 'Flask-Lab-Work'
+    }
 
 count = 0
 
@@ -134,7 +147,7 @@ def reset_counter():
 
 @app.route("/lab1/info")
 def info():
-    return redirect("/author")
+    return redirect(url_for('author'))
 
 @app.route("/lab1/created")
 def created():
@@ -148,31 +161,93 @@ def created():
 </html>
 """, 201
 
+# Глобальный список для хранения лога 404 ошибок
+error_404_log = []
+
 @app.errorhandler(404)
 def not_found(err):
+    # Получаем данные о запросе
+    client_ip = request.remote_addr
+    access_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    requested_url = request.url
+    user_agent = request.headers.get('User-Agent', 'Неизвестно')
+    
+    # Добавляем запись в лог
+    log_entry = {
+        'ip': client_ip,
+        'time': access_time,
+        'url': requested_url,
+        'user_agent': user_agent
+    }
+    error_404_log.append(log_entry)
+    
     css_path = url_for("static", filename="error.css")
     image_path = url_for("static", filename="404.jpg")
+    
+    # Формируем HTML с логом
+    log_html = ""
+    for entry in reversed(error_404_log[-10:]):  # Последние 10 записей
+        log_html += f"""
+        <div class="log-entry">
+            <strong>Время:</strong> {entry['time']} | 
+            <strong>IP:</strong> {entry['ip']} | 
+            <strong>URL:</strong> {entry['url']} | 
+            <strong>Браузер:</strong> {entry['user_agent'][:50]}...
+        </div>
+        """
+    
     return f"""
 <!doctype html>
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="{css_path}">
         <title>Страница не найдена</title>
+        <style>
+            .log-entry {{
+                background: rgba(255,255,255,0.1);
+                padding: 10px;
+                margin: 5px 0;
+                border-radius: 5px;
+                font-family: monospace;
+                font-size: 0.9em;
+            }}
+            .info-block {{
+                background: rgba(255,255,255,0.1);
+                padding: 15px;
+                border-radius: 10px;
+                margin: 15px 0;
+            }}
+        </style>
     </head>
     <body>
         <div class="container">
             <h1>Ой! Кажется, мы потеряли эту страницу...</h1>
             <div class="error-code">404</div>
             <img src="{image_path}" alt="Потерянная страница">
+            
+            <div class="info-block">
+                <h3>Информация о вашем запросе:</h3>
+                <p><strong>Ваш IP-адрес:</strong> {client_ip}</p>
+                <p><strong>Дата и время доступа:</strong> {access_time}</p>
+                <p><strong>Запрошенный адрес:</strong> {requested_url}</p>
+            </div>
+            
             <p>Запрашиваемая страница куда-то пропала. Возможно, она переехала или никогда не существовала.</p>
-            <p>Попробуйте вернуться на <a href="/">главную страницу</a> или проверьте правильность адреса.</p>
+            <p>Попробуйте вернуться на <a href="{url_for('index')}">главную страницу</a> или проверьте правильность адреса.</p>
+            
             <div class="fun-fact">
                 <strong>Интересный факт:</strong> В интернете ежедневно теряется более 1 миллиона страниц!
+            </div>
+            
+            <div class="info-block">
+                <h3>Журнал 404 ошибок (последние 10 записей):</h3>
+                {log_html if log_html else "<p>Пока нет записей в журнале</p>"}
             </div>
         </div>
     </body>
 </html>
 """, 404
+
 @app.route('/400')
 def bad_request():
     return """
@@ -244,6 +319,7 @@ def teapot():
     </body>
 </html>
 """, 418
+
 @app.route('/server_error')
 def server_error_test():
     result = 10 / 0
