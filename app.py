@@ -161,18 +161,16 @@ def created():
 </html>
 """, 201
 
-# Глобальный список для хранения лога 404 ошибок
 error_404_log = []
 
 @app.errorhandler(404)
 def not_found(err):
-    # Получаем данные о запросе
+
     client_ip = request.remote_addr
     access_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     requested_url = request.url
     user_agent = request.headers.get('User-Agent', 'Неизвестно')
     
-    # Добавляем запись в лог
     log_entry = {
         'ip': client_ip,
         'time': access_time,
@@ -184,9 +182,9 @@ def not_found(err):
     css_path = url_for("static", filename="error.css")
     image_path = url_for("static", filename="404.jpg")
     
-    # Формируем HTML с логом
+    
     log_html = ""
-    for entry in reversed(error_404_log[-10:]):  # Последние 10 записей
+    for entry in reversed(error_404_log[-10:]):
         log_html += f"""
         <div class="log-entry">
             <strong>Время:</strong> {entry['time']} | 
@@ -350,27 +348,78 @@ def a():
 def a2():
     return 'со слэшем'
 flower_list = ['роза', 'тюльпан', 'незабудка', 'ромашка']
+
 @app.route('/lab2/flowers/<int:flower_id>')
-def frowers(flower_id):
-    if flower_id >= len(flower_list):
+def flowers(flower_id):
+    if flower_id >= len(flower_list) or flower_id < 0:
         abort(404)
     else:
-        return "id=" + flower_list[flower_id]
-    
+        flower_name = flower_list[flower_id]
+        return f"""
+<!doctype html>
+<html>
+    <body>
+        <h1>Цветок с ID {flower_id}</h1>
+        <p>Название: <b>{flower_name}</b></p>
+        <p><a href="/lab2/flowers_list">Посмотреть все цветы</a></p>
+    </body>
+</html>
+"""
+
 @app.route('/lab2/flowers/<name>')
 def add_flower(name):
     flower_list.append(name)
+    return f"""
+<!doctype html>
+<html>
+    <body>
+        <h1>Добавлен цветок</h1>
+        <p>Название нового цветка: <b>{name}</b></p>
+        <p>Всего цветов: {len(flower_list)}</p>
+        <p>Полный список: {flower_list}</p>
+        <p><a href="/lab2/flowers_list">Посмотреть все цветы</a></p>
+    </body>
+</html>
+"""
+
+@app.route('/lab2/flowers/')
+def add_flower_no_name():
+    return """
+<!doctype html>
+<html>
+    <body>
+        <h1>Ошибка 400</h1>
+        <p style="color:red;">Вы не задали имя цветка!</p>
+        <p><a href="/lab2/flowers_list">Посмотреть все цветы</a></p>
+    </body>
+</html>
+""", 400
+
+@app.route('/lab2/flowers_list')
+def show_flowers():
+    flowers_html = "<ul>" + "".join([f"<li>{f}</li>" for f in flower_list]) + "</ul>"
     return f'''
 <!doctype html>
 <html>
     <body>
-    <h1>Добавлен цветок</h1>
-    <p>Название нового цветка: {name}</p>
-    <p>Всего цветов: {len(flower_list)}</p>
-    <p>Полный список: {flower_list}</p>
+        <h1>Список всех цветов</h1>
+        <p>Всего цветов: {len(flower_list)}</p>
+        {flowers_html}
+        <p><a href="/lab2/clear_flowers">Очистить список</a></p>
     </body>
 </html>
 '''
+@app.route('/lab2/clear_flowers')
+def clear_flowers():
+    flower_list.clear()
+    return'''
+<!doctype html>
+<html>
+    <body>
+        <h1>Список цветов очищен</h1>
+        <p><a href="/lab2/flowers_list">Посмотреть все цветы</a></p>
+    </body>
+</html>'''
 @app.route('/lab2/example')
 def example():
     student = 'Окачутин Вячеслав'
@@ -392,3 +441,54 @@ def lab2():
 def filters():
     phrase = "0 <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
     return render_template('filters.html', phrase=phrase)
+
+@app.route('/lab2/calc/')
+def calc_default():
+    return redirect('/lab2/calc/1/1')
+
+@app.route('/lab2/calc/<int:a>')
+def calc_one_arg(a):
+    return redirect(f'/lab2/calc/{a}/1')
+
+@app.route('/lab2/calc/<int:a>/<int:b>')
+def calc(a, b):
+    if b == 0:
+        div_result = "Ошибка: деление на ноль"
+    else:
+        div_result = a / b
+
+    return f'''
+<!doctype html>
+<html>
+    <body>
+        <h1>Калькулятор</h1>
+        <p>Первое число: {a}</p>
+        <p>Второе число: {b}</p>
+        <ul>
+            <li>Сумма: {a + b}</li>
+            <li>Разность: {a - b}</li>
+            <li>Произведение: {a * b}</li>
+            <li>Деление: {div_result}</li>
+            <li>Возведение в степень: {a ** b}</li>
+        </ul>
+        <p><a href="/lab2/calc/">Попробовать снова с 1 и 1</a></p>
+    </body>
+</html>
+'''
+books = [
+    {"author": "Дж. К. Роулинг", "title": "Гарри Поттер и философский камень", "genre": "Фэнтези", "pages": 432},
+    {"author": "Дж. Р. Р. Толкин", "title": "Властелин колец: Братство кольца", "genre": "Фэнтези", "pages": 576},
+    {"author": "Артур Конан Дойл", "title": "Собака Баскервилей", "genre": "Детектив", "pages": 320},
+    {"author": "Дэн Браун", "title": "Код да Винчи", "genre": "Триллер", "pages": 480},
+    {"author": "Джордж Мартин", "title": "Игра престолов", "genre": "Фэнтези", "pages": 864},
+    {"author": "Агата Кристи", "title": "Убийство в Восточном экспрессе", "genre": "Детектив", "pages": 288},
+    {"author": "Рэй Брэдбери", "title": "Марсианские хроники", "genre": "Фантастика", "pages": 352},
+    {"author": "Стивен Кинг", "title": "Зелёная миля", "genre": "Драма", "pages": 544},
+    {"author": "Эрих Мария Ремарк", "title": "Три товарища", "genre": "Роман", "pages": 480},
+    {"author": "Антуан де Сент-Экзюпери", "title": "Маленький принц", "genre": "Сказка", "pages": 112}
+]
+
+@app.route('/lab2/books')
+def show_books():
+    lab_num = '2'
+    return render_template('books.html', books=books, lab_num=lab_num)
