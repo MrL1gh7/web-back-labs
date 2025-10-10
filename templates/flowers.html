@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 2{% endblock %}
+
+{% block main %}
+<h1>Список цветов</h1>
+
+{% if flowers %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>№</th>
+        <th>Название</th>
+        <th>Цена (₽)</th>
+        <th>Действие</th>
+    </tr>
+
+    {% for flower in flowers %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ flower.name }}</td>
+        <td>{{ flower.price }}</td>
+        <td>
+            <a href="{{ url_for('delete_flower', flower_id=loop.index0) }}" 
+               onclick="return confirm('Удалить {{ flower.name }}?')">Удалить</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>Пока нет добавленных цветов. Добавьте первый!</p>
+{% endif %}
+
+<hr>
+
+<h2>Добавить новый цветок</h2>
+<form action="{{ url_for('add_flower_post') }}" method="post">
+    <p>
+        <label>Название:</label><br>
+        <input type="text" name="name" required>
+    </p>
+    <p>
+        <label>Цена (₽):</label><br>
+        <input type="number" name="price" min="1" required>
+    </p>
+    <p>
+        <button type="submit">Добавить</button>
+    </p>
+</form>
+{% endblock %}
