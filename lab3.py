@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, make_response, redirect
-import datetime
 
 lab3 = Blueprint('lab3', __name__)
 
@@ -24,7 +23,16 @@ def del_cookie():
     return resp
 @lab3.route('/lab3/form1')
 def form1():
+    errors = {}
     user = request.args.get('user')
+    if user == '':
+        errors['user'] = 'Заполните имя!'
+    er_age = {}
     age = request.args.get('age')
+    if age == '':
+        er_age['age'] = 'Заполните возраст!'
     sex = request.args.get('sex')
-    return render_template('lab3/form1.html', user=user, age=age, sex=sex)
+    return render_template('lab3/form1.html', user=user, age=age, sex=sex, errors=errors, er_age=er_age)
+@lab3.route('/lab3/order')
+def order():
+    return render_template('/lab3/order.html')
