@@ -60,8 +60,12 @@ def author():
     name = "Окачутин Вячеслав Владимирович"
     group = "ФБИ-33"
     faculty = "ФБ"
+    css_path = url_for("static", filename="lab1/main.css") 
     return """<!doctype html>
         <html>
+            <head>
+                <link rel="stylesheet" type="text/css" href=""" + css_path + """>
+            </head>
             <body>
                 <p>Студент: """ + name + """</p>
                 <p>Группа: """ + group + """</p>
@@ -72,8 +76,8 @@ def author():
 
 @lab1.route('/lab1/image')
 def image():
-    path = url_for("static", filename="flask.jpg")
-    css_path = url_for("static", filename="lab1.css") 
+    path = url_for("static", filename="lab1/flask.jpg")
+    css_path = url_for("static", filename="lab1/main.css") 
     return """<!doctype html>
     <html>
         <head>
@@ -100,10 +104,14 @@ def counter():
     url = request.url
     client_ip = request.remote_addr
     reset_url = url_for("lab1.reset_counter")
+    css_path = url_for("static", filename="lab1/main.css") 
     return """
 <!doctype html>
 <html>
     <body>
+    <head>
+        <link rel="stylesheet" type="text/css" href=""" + css_path + """>
+    </head>
         Сколько раз вы сюда заходили: """ + str(count) + """
         <hr>
         Дата и время: """ + str(time) + """<br>

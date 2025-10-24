@@ -117,26 +117,16 @@ def show_books():
     return render_template('books.html', books=books, lab_num=lab_num)
 
 cars = [
-    {"name": "Tesla Model S", "image": "tesla_model_s.jpg", "description": "Электрический седан с мощным ускорением и автопилотом."},
-    {"name": "BMW M5", "image": "bmw_m5.jpg", "description": "Спортивный седан бизнес-класса с мощным V8 двигателем."},
-    {"name": "Mercedes-Benz G-Class", "image": "mercedes_g_class.jpg", "description": "Легендарный внедорожник с премиальным интерьером."},
-    {"name": "Audi R8", "image": "audi_r8.jpg", "description": "Суперкар с двигателем V10 и фирменным полным приводом Quattro."},
-    {"name": "Toyota Supra", "image": "toyota_supra.jpg", "description": "Японский спорткар с турбированным двигателем и культовым дизайном."},
-    {"name": "Ford Mustang", "image": "ford_mustang.jpg", "description": "Американская классика — мускулистый купе с громким ревом двигателя."},
-    {"name": "Lamborghini Aventador", "image": "lamborghini_aventador.jpg", "description": "Итальянский суперкар с атмосферным V12 и футуристичным дизайном."},
-    {"name": "Porsche 911", "image": "porsche_911.jpg", "description": "Легендарное купе с идеальной управляемостью и мощным оппозитным мотором."},
-    {"name": "Nissan GT-R", "image": "nissan_gtr.jpg", "description": "Суперкар, прозванный 'Godzilla', благодаря мощи и технологиям."},
-    {"name": "Chevrolet Camaro", "image": "chevrolet_camaro.jpg", "description": "Мускул-кар с агрессивным дизайном и громким характером."},
-    {"name": "Ferrari F8 Tributo", "image": "ferrari_f8_tributo.jpg", "description": "Элегантный итальянский суперкар с мощным V8 и идеальной аэродинамикой."},
-    {"name": "McLaren 720S", "image": "mclaren_720s.jpg", "description": "Легкий и быстрый суперкар с впечатляющей управляемостью."},
-    {"name": "Bugatti Chiron", "image": "bugatti_chiron.jpg", "description": "Гиперкар с 1500 лошадиными силами и скоростью свыше 400 км/ч."},
-    {"name": "Rolls-Royce Phantom", "image": "rolls_royce_phantom.jpg", "description": "Символ роскоши с безупречным комфортом и ручной сборкой."},
-    {"name": "Aston Martin DB11", "image": "aston_martin_db11.jpg", "description": "Британский гранд-турер с утонченным стилем и мощным двигателем."},
-    {"name": "Jaguar F-Type", "image": "jaguar_f_type.jpg", "description": "Спортивное купе с харизматичным звуком и британским шиком."},
-    {"name": "Lexus LC500", "image": "lexus_lc500.jpg", "description": "Футуристичный японский купе с атмосферным V8 и премиум-интерьером."},
-    {"name": "Mazda RX-7", "image": "mazda_rx7.jpg", "description": "Легендарный спорткар с роторным двигателем и культовым дизайном."},
-    {"name": "Subaru WRX STI", "image": "subaru_wrx_sti.jpg", "description": "Полный привод, турбо и дух раллийных побед."},
-    {"name": "Dodge Challenger", "image": "dodge_challenger.jpg", "description": "Классический американский мускул-кар с огромным V8."}
+    {"name": "Tesla Model S", "image": "lab2/tesla_model_s.jpg", "description": "Электрический седан с мощным ускорением и автопилотом."},
+    {"name": "BMW M5", "image": "lab2/bmw_m5.jpg", "description": "Спортивный седан бизнес-класса с мощным V8 двигателем."},
+    {"name": "Mercedes-Benz G-Class", "image": "lab2/mercedes_g_class.jpg", "description": "Легендарный внедорожник с премиальным интерьером."},
+    {"name": "Audi R8", "image": "lab2/audi_r8.jpg", "description": "Суперкар с двигателем V10 и фирменным полным приводом Quattro."},
+    {"name": "Toyota Supra", "image": "lab2/toyota_supra.jpg", "description": "Японский спорткар с турбированным двигателем и культовым дизайном."},
+    {"name": "Ford Mustang", "image": "lab2/ford_mustang.jpg", "description": "Американская классика — мускулистый купе с громким ревом двигателя."},
+    {"name": "Lamborghini Aventador", "image": "lab2/lamborghini_aventador.jpg", "description": "Итальянский суперкар с атмосферным V12 и футуристичным дизайном."},
+    {"name": "Porsche 911", "image": "lab2/porsche_911.jpg", "description": "Легендарное купе с идеальной управляемостью и мощным оппозитным мотором."},
+    {"name": "Nissan GT-R", "image": "lab2/nissan_gtr.jpg", "description": "Суперкар, прозванный 'Godzilla', благодаря мощи и технологиям."},
+    {"name": "Chevrolet Camaro", "image": "lab2/chevrolet_camaro.jpg", "description": "Мускул-кар с агрессивным дизайном и громким характером."},
 ]
 @lab2.route("/lab2/cars")
 def show_cars():

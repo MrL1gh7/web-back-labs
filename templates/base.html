@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Окачутин Вячеслав. {% block lab %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='lab1/main.css')}}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='lab1/flask.jpg') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='lab1/flask.jpg') }}">
     <style>
         body {
             {% if request.cookies.get('color') %}
