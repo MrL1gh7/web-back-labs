@@ -1,16 +1,18 @@
 {% extends "base.html" %}
-{# номоер лабораторной работы #}
+
 {% block lab %}Лабораторная работа 2{% endblock %}
-{# основной контен: #}
+
 {% block main %}
     <h1>Шаблоны</h1>
     <div>Тема лабораторной - шаблоны. Список сделанных страниц:</div>
     <ul>
-        <li><a href="{{ url_for('show_flowers') }}">Цветы (работа со списками)</a></li>
-        <li><a href="{{ url_for('calc', a=5, b=2) }}"> Калькулятор (пример передачи параметров)</a></li>
-        <li><a href="{{ url_for('filters') }}"> Фильтры Jinja</a></li>
-        <li><a href="{{ url_for('show_books') }}"> Книги (работа с данными)</a></li>
-        <li><a href="{{ url_for('show_cars') }}"> Машины (список объектов с фото)</a></li>
-        <li><a href="{{ url_for('example') }}"> Пример шаблона</a></li>
+        <li><a href="{{ url_for('lab2.show_flowers') }}">Цветы</a></li>
+        <li><a href="{{ url_for('lab2.calc', a=5, b=2) }}">Калькулятор</a></li>
+        <li><a href="{{ url_for('lab2.filters') }}">Фильтры Jinja</a></li>
+        <li><a href="{{ url_for('lab2.show_books') }}">Книги</a></li>
+        <li><a href="{{ url_for('lab2.show_cars') }}">Машины</a></li>
+        <li><a href="{{ url_for('lab2.example') }}">Пример шаблона</a></li>
+        <li><a href="/lab2/a">Без слэша</a></li>
+        <li><a href="/lab2/a/">Со слэшем</a></li>
     </ul>
 {% endblock %}

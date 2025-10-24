@@ -20,7 +20,7 @@
         <td>{{ flower.name }}</td>
         <td>{{ flower.price }}</td>
         <td>
-            <a href="{{ url_for('delete_flower', flower_id=loop.index0) }}" 
+            <a href="{{ url_for('lab2.delete_flower', flower_id=loop.index0) }}" 
                onclick="return confirm('Удалить {{ flower.name }}?')">Удалить</a>
         </td>
     </tr>
@@ -33,7 +33,7 @@
 <hr>
 
 <h2>Добавить новый цветок</h2>
-<form action="{{ url_for('add_flower_post') }}" method="post">
+<form action="{{ url_for('lab2.add_flower_post') }}" method="post">
     <p>
         <label>Название:</label><br>
         <input type="text" name="name" required>
