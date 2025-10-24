@@ -159,3 +159,97 @@ def clear_settings():
     resp.delete_cookie('bg_color') 
     resp.delete_cookie('font_size')
     return resp
+# Список автомобилей для поиска
+cars_for_search = [
+    {"name": "Lada Granta", "price": 650000, "brand": "Lada", "year": 2023},
+    {"name": "Kia Rio", "price": 1250000, "brand": "Kia", "year": 2023},
+    {"name": "Hyundai Creta", "price": 1650000, "brand": "Hyundai", "year": 2023},
+    {"name": "Volkswagen Polo", "price": 1400000, "brand": "Volkswagen", "year": 2023},
+    {"name": "Skoda Rapid", "price": 1350000, "brand": "Skoda", "year": 2023},
+    {"name": "Renault Logan", "price": 950000, "brand": "Renault", "year": 2023},
+    {"name": "Toyota Camry", "price": 2850000, "brand": "Toyota", "year": 2023},
+    {"name": "BMW 3 Series", "price": 4200000, "brand": "BMW", "year": 2023},
+    {"name": "Mercedes C-Class", "price": 4800000, "brand": "Mercedes", "year": 2023},
+    {"name": "Audi A4", "price": 3800000, "brand": "Audi", "year": 2023},
+    {"name": "Ford Focus", "price": 1750000, "brand": "Ford", "year": 2023},
+    {"name": "Nissan Qashqai", "price": 2200000, "brand": "Nissan", "year": 2023},
+    {"name": "Mazda CX-5", "price": 2650000, "brand": "Mazda", "year": 2023},
+    {"name": "Subaru Forester", "price": 3100000, "brand": "Subaru", "year": 2023},
+    {"name": "Honda CR-V", "price": 2950000, "brand": "Honda", "year": 2023},
+    {"name": "Lexus RX", "price": 5500000, "brand": "Lexus", "year": 2023},
+    {"name": "Volvo XC60", "price": 4200000, "brand": "Volvo", "year": 2023},
+    {"name": "Land Rover Discovery", "price": 6800000, "brand": "Land Rover", "year": 2023},
+    {"name": "Porsche Cayenne", "price": 8500000, "brand": "Porsche", "year": 2023},
+    {"name": "Tesla Model 3", "price": 4500000, "brand": "Tesla", "year": 2023},
+    {"name": "Chevrolet Tahoe", "price": 7200000, "brand": "Chevrolet", "year": 2023},
+    {"name": "Jeep Grand Cherokee", "price": 5200000, "brand": "Jeep", "year": 2023},
+    {"name": "Mitsubishi Outlander", "price": 2450000, "brand": "Mitsubishi", "year": 2023},
+    {"name": "Suzuki Vitara", "price": 1950000, "brand": "Suzuki", "year": 2023}
+]
+
+@lab3.route('/lab3/cars_search')
+def cars_search():
+    min_price_cookie = request.cookies.get('min_price', '')
+    max_price_cookie = request.cookies.get('max_price', '')
+    
+    min_price_arg = request.args.get('min_price', min_price_cookie)
+    max_price_arg = request.args.get('max_price', max_price_cookie)
+    reset = request.args.get('reset')
+    
+    if reset:
+        resp = make_response(redirect('/lab3/cars_search'))
+        resp.delete_cookie('min_price')
+        resp.delete_cookie('max_price')
+        return resp
+    
+    min_price_all = min(car['price'] for car in cars_for_search)
+    max_price_all = max(car['price'] for car in cars_for_search)
+    
+    filtered_cars = cars_for_search
+    message = ""
+    
+    if min_price_arg or max_price_arg:
+        try:
+            min_price = int(min_price_arg) if min_price_arg else min_price_all
+            max_price = int(max_price_arg) if max_price_arg else max_price_all
+            
+            if min_price > max_price:
+                min_price, max_price = max_price, min_price
+            
+            filtered_cars = [
+                car for car in cars_for_search
+                if min_price <= car['price'] <= max_price
+            ]
+            
+            count = len(filtered_cars)
+            if count == 0:
+                message = "Не найдено ни одного автомобиля в заданном диапазоне цен"
+            else:
+                message = f"Найдено автомобилей: {count}"
+                
+            if min_price_arg or max_price_arg:
+                resp = make_response(render_template('lab3/cars_search.html',
+                    cars=filtered_cars,
+                    min_price=min_price,
+                    max_price=max_price,
+                    min_price_all=min_price_all,
+                    max_price_all=max_price_all,
+                    message=message
+                ))
+                if min_price_arg:
+                    resp.set_cookie('min_price', min_price_arg)
+                if max_price_arg:
+                    resp.set_cookie('max_price', max_price_arg)
+                return resp
+                
+        except ValueError:
+            message = "Ошибка: введите корректные числовые значения"
+    
+    return render_template('lab3/cars_search.html',
+        cars=filtered_cars,
+        min_price=min_price_arg,
+        max_price=max_price_arg,
+        min_price_all=min_price_all,
+        max_price_all=max_price_all,
+        message=message or f"Всего автомобилей: {len(filtered_cars)}"
+    )
