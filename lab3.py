@@ -77,3 +77,78 @@ def settings():
                          color=color, 
                          bg_color=bg_color, 
                          font_size=font_size)
+@lab3.route('/lab3/ticket')
+def ticket():
+    errors = {}
+    
+    fio = request.args.get('fio')
+    shelf = request.args.get('shelf')
+    linen = request.args.get('linen') == 'on'
+    luggage = request.args.get('luggage') == 'on'
+    age_str = request.args.get('age')
+    departure = request.args.get('departure')
+    destination = request.args.get('destination')
+    travel_date = request.args.get('travel_date')
+    insurance = request.args.get('insurance') == 'on'
+    
+    form_submitted = any([fio, shelf, age_str, departure, destination, travel_date])
+    
+    if form_submitted:
+        if not fio:
+            errors['fio'] = 'Заполните ФИО пассажира'
+        if not shelf:
+            errors['shelf'] = 'Выберите полку'
+        if not age_str:
+            errors['age'] = 'Заполните возраст'
+        elif not age_str.isdigit() or not (1 <= int(age_str) <= 120):
+            errors['age'] = 'Возраст должен быть от 1 до 120 лет'
+        if not departure:
+            errors['departure'] = 'Заполните пункт выезда'
+        if not destination:
+            errors['destination'] = 'Заполните пункт назначения'
+        if not travel_date:
+            errors['travel_date'] = 'Выберите дату поездки'
+        
+        if errors:
+            return render_template('lab3/ticket.html', 
+                                 errors=errors,
+                                 fio=fio,
+                                 shelf=shelf,
+                                 linen=linen,
+                                 luggage=luggage,
+                                 age=age_str,
+                                 departure=departure,
+                                 destination=destination,
+                                 travel_date=travel_date,
+                                 insurance=insurance,
+                                 show_result=False)
+        
+        age = int(age_str)
+        if age < 18:
+            price = 700
+        else:
+            price = 1000
+        
+        if shelf in ['lower', 'side_lower']:
+            price += 100
+        if linen:
+            price += 75
+        if luggage:
+            price += 250
+        if insurance:
+            price += 150
+        
+        return render_template('lab3/ticket.html',
+                             fio=fio,
+                             shelf=shelf,
+                             linen=linen,
+                             luggage=luggage,
+                             age=age,
+                             departure=departure,
+                             destination=destination,
+                             travel_date=travel_date,
+                             insurance=insurance,
+                             price=price,
+                             show_result=True)
+    
+    return render_template('lab3/ticket.html', show_result=False)
