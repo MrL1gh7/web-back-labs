@@ -15,7 +15,7 @@ for i in range(1, 11):
 
 
 @lab6.route('/lab6/')
-def main():
+def lab():
     return render_template('lab6/lab6.html')
 
 
