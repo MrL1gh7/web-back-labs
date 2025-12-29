@@ -30,8 +30,8 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'секретно-сек
 app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'postgres')
 
 if app.config['DB_TYPE'] == 'postgres':
-    db_name = 'andrey_gorshkov_orm'
-    db_user = 'andrey_gorshkov_orm'
+    db_name = 'slava_ok_orm'
+    db_user = 'slava_ok_orm'
     db_password = '123'
     host_ip = '127.0.0.1'
     host_port = 5432
@@ -41,7 +41,7 @@ if app.config['DB_TYPE'] == 'postgres':
 
 else:
     dir_path = path.dirname(path.realpath(__file__))
-    db_path = path.join(dir_path, "ivan_ivanov_orm.db")
+    db_path = path.join(dir_path, "slava_ok_orm.db")
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
     
 db.init_app(app)
